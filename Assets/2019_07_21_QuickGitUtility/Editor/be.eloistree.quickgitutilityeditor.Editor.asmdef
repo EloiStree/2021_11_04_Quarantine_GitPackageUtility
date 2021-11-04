@@ -1,7 +1,9 @@
 {
     "name": "be.eloistree.quickgitutilityeditor",
+    "rootNamespace": "",
     "references": [
-        "be.eloistree.quickgitutility"
+        "be.eloistree.quickgitutility",
+        "be.eloistree.generaltoolbox"
     ],
     "includePlatforms": [
         "Editor"

@@ -25,13 +25,12 @@ public class PublicGitHub {
             string page = DownloadWebPage.DownloadPageWithWebClient(url);
             // page= page.Trim().Substring(1, page.Length-2);
             page = " { \"values\": " + page + " } ";
-           // Debug.Log("URL" + wasLoaded + "/" + errorMessage + ":" + url);
-            Debug.Log("URL:" + url);
-            Debug.Log("Page:" + page);
+            // Debug.Log("URL" + wasLoaded + "/" + errorMessage + ":" + url);
+            //Debug.Log("URL:" + url);
+            //Debug.Log("Page:" + page);
             JsonListGitHubProjects pl = JsonUtility.FromJson<JsonListGitHubProjects>(page);
             //Debug.Log(pl.values. Length);
             result.AddRange(pl.values);
-
         }
         return result;
     }
@@ -55,7 +54,7 @@ public class PublicGitLab
             string page = DownloadWebPage.DownloadPageWithSuccess(url, out wasLoaded, out error);
            // page= page.Trim().Substring(1, page.Length-2);
             page = " { \"values\": " + page + " } ";
-            Debug.Log("Page:" + page);
+            //Debug.Log("Page:" + page);
             JsonListGitLabProjects pl = JsonUtility.FromJson<JsonListGitLabProjects>(page);
            // Debug.Log(pl.values. Length);
             result.AddRange(pl.values);
@@ -89,7 +88,6 @@ public  class OnlineGitProject {
     public  string GetCloneLink() { return m_cloneLink; }
     public  DateTime GetCreatedDate() { return m_createdDate; }
     public  DateTime GetUpdatedDate() { return m_updateDate; }
-
 }
 
 

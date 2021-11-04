@@ -24,7 +24,7 @@ public static class QuickGit
         }
         CreateGitKeepInEmptyFolders(wherePath);
     }
-    public static void CreateGitKeepInEmptyFolders(string wherePath, string keepTextContent = "Hey mon ami, tu aimes ça manger des patates ?")
+    public static void CreateGitKeepInEmptyFolders(string wherePath, string keepTextContent = "Keep")
     {
         string[] paths = GetAllFolders(wherePath, true);
         foreach (var path in paths)
@@ -204,6 +204,24 @@ public static class QuickGit
 
     public static bool IsPathHasGitRootFolder(string directoryPath) {
         return Directory.Exists(directoryPath + "/.git");
+    }
+
+    public static bool IsPathHasGitMinimumChildrenFolders(string directoryPath) {
+        string[] folders = Directory.GetDirectories(directoryPath);
+        return DoesPathsContain(in folders, "hooks") && 
+        DoesPathsContain(in folders, "refs") && 
+        DoesPathsContain(in folders, "info") && 
+        DoesPathsContain(in folders, "objects");
+    }
+
+    private static bool DoesPathsContain(in string[] foldersPath, in string folderToWatchFor)
+    {
+        for (int i = 0; i < foldersPath.Length; i++)
+        {
+            if (foldersPath[i].ToLower().EndsWith(folderToWatchFor.ToLower()))
+                return true;
+        }
+        return false;
     }
 
     public static bool IsPathIsGitRootFormat(string directoryPath)
@@ -618,8 +636,6 @@ public class LogCommitReceived
     {
         return new DateTime(m_year, m_month, m_day, m_hour, m_minute, m_second, m_millisecond);
     }
-
-
     public string GetAsOnliner()
     {
         return string.Format("{0}({1}): {2} -> {3}",
@@ -637,111 +653,6 @@ public class LogCommitReceived
         m_minute = minute;
         m_second = second;
         m_millisecond = millisecond;
-    }
-
-
-}
-
-
-[System.Serializable]
-public class GitLink
-{
-    public string m_gitLink;
-    public bool IsLinkDefined() { return !string.IsNullOrWhiteSpace(m_gitLink); }
-}
-[System.Serializable]
-public class GitLinkOnDisk : GitLink
-{
-    public string m_projectDirectoryPath;
-
-    public GitLinkOnDisk(string directoryPath)
-    {
-        QuickGit.GetGitUrl(directoryPath,out m_gitLink);
-        this.m_projectDirectoryPath = directoryPath;
-    }
-
-    public void OpenFolder()
-    {
-        if (Directory.Exists(m_projectDirectoryPath))
-            Application.OpenURL(m_projectDirectoryPath);
-    }
-    public void OpenHost()
-    {
-            Application.OpenURL(m_gitLink);
-    }
-    public bool IsPathDefined() { return !string.IsNullOrWhiteSpace(m_projectDirectoryPath); }
-
-    public string GetDirectoryPath()
-    {
-        return m_projectDirectoryPath;
-    }
-
-    public bool IsInsideUnityProject() {
-       return  QuickGit.IsGitInsideProject(m_projectDirectoryPath);
-    }
-    public bool IsOutsideUnityProject() {
-        return !IsInsideUnityProject();
-    }
-
-    public bool Exist()
-    {
-        return Directory.Exists(m_projectDirectoryPath) && Directory.Exists(m_projectDirectoryPath+"/.git");
-    }
-
-    public string GetUrl()
-    {
-        return m_gitLink;
-    }
-
-    public string GetName()
-    {
-        int indexOf = m_gitLink.LastIndexOf("/");
-        if (indexOf < 0)
-            indexOf = m_gitLink.LastIndexOf("\\");
-        if (indexOf < 0)
-            indexOf = 0;
-        return m_gitLink.Substring(indexOf).Replace(".git", "")
-            .Replace("/", "").Replace("\\", "");
-    }
-
-    public bool IsHosted()
-    {
-        return m_gitLink != null && m_gitLink.Length > 0;
-    }
-
-    public GitServer GetServerType()
-    {
-        return DownloadInfoFromGitServer.GetServerTypeOfPath(m_gitLink);
-    }
-
-    public bool HasUrl()
-    {
-        return IsHosted();
-    }
-
-    public string GetRelativeDirectoryPath()
-    {
-       string up= Directory.GetCurrentDirectory().Replace("\\","/");
-       string ap = m_projectDirectoryPath.Replace("\\", "/");
-        string result = ap.Replace(up, "");
-        if (result.Length>0 && 
-            (result[0] == '/' || result[0] == '\\') )
-            return result.Substring(1);
-        return result;
-    }
-
-    public string GetLastRevision()
-    {
-        bool found;
-        string value;
-        QuickGit.GetLastRevision(m_projectDirectoryPath, out found, out value);
-        return value;
-    }
-    public string GetLastRevision(out bool found)
-    {
-        string value;
-        QuickGit.GetLastRevision(m_projectDirectoryPath, out found, out value);
-        return value;
     }
 }
 
