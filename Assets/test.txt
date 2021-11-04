@@ -1,0 +1,3 @@
+"be.eloistree.quickgitutility":"https://github.com/EloiStree/2019_07_21_QuickGitUtility.git",
+"be.eloistree.license":"https://github.com/EloiStree/GeneralLicense.git",
+"be.eloistree.unitypackagefacilitator":"https://github.com/EloiStree/2019_07_21_UnityPackageFacilitator.git",
